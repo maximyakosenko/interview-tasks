@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Console\Commands;
-
 use App\Models\Shop;
 use App\Tracking\TrackingService\Logger;
 use Illuminate\Console\Command;
@@ -51,12 +50,12 @@ class CancelExpiredFreeCharges extends Command
             ->get();
 
         $count = $shops->count();
-        if ($count > 0) {
-            foreach ($shops as $shopData) {
+        if($count > 0){
+            foreach ( $shops as $shopData ) {
                 $findShop = Shop::whereDomain($shopData->domain)->first();
                 /** @var Charge $charge */
                 $charge = $findShop->charges()->periodic()->activeOrTrial()->first();
-                if (!empty($charge)) {
+                if(!empty($charge)){
                     $charge->cancel();
                     Logger::action("cancelExpiredFreeCharge", ['id' => $charge->id, 'shop_id' => $findShop->id, 'status' => $charge->status]);
                 }
